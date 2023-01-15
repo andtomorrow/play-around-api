@@ -1,4 +1,5 @@
 import requests
+from dotenv import dotenv_values
 
 class Bored:
     def __init__(self):
@@ -50,7 +51,7 @@ class Bored:
 
 class Pixab:
     def __init__(self):
-        self.__key = open('pxbkey.txt', 'r').readline()
+        self.__key = dotenv_values('.env')['PXBKEY']
         self.URL = 'https://pixabay.com/api'
         self.outURL = self.URL + '/?key=' + self.__key + '&'
         
