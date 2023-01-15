@@ -1,7 +1,9 @@
-import os, requests
+import os
 from bored_base import *
 
 bd = Bored()
+px = Pixab()
+
 
 bd.URL = 'http://www.boredapi.com/api/activity'
 
@@ -17,24 +19,35 @@ p1, p2 = bd.params_setting(chx)
 os.system('clear')
 the_ac = bd.recommand(p1, p2)
 
-os.system('clear')
-sentence = f"I recommend you <{the_ac['activity']}>. It's a(n) {the_ac['type']} activity where {the_ac['participants']} persons are involved."
-
-if bd.crtr == 'price':
-    print(sentence, 'Besides, it costs no money!')
-else:
+if "No activity found with the specified parameters" in the_ac.values():
+    sentence = "I'm sorry, there's no activity that I can suggest you for now."
     print(sentence)
+else:
+    sentence = f"I recommend you <{the_ac['activity']}>. It's a(n) {the_ac['type']} activity where {the_ac['participants']} persons are involved."
 
 
-'''
-activity : Description of the queried activity
-accessibility : A factor describing how possible an event is to do with zero being the most accessible
-[0.0, 1.0]
-type : Type of the activity
-["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
-participants : The number of people that this activity could involve
-[0, n]
-price : A factor describing the cost of the event with zero being free
-[0, 1]
-key : A unique numeric id [1000000, 9999999]
-'''
+    params = {'q':the_ac['activity']}
+    img_json = px.search_img(params)
+    
+    if img_json['total'] == 0:
+        img_link = ''
+    else:
+        img_link = img_json['hits'][0]['pageURL']
+
+    if img_link:
+        show_img_link = "\nHere's a URL of image you might like:\n" + img_link
+    else:
+        show_img_link = ''
+
+
+    os.system('clear')
+    if the_ac['link']:
+        sentence += "\nHere's a URL you might like:\n" + the_ac['link'] + show_img_link
+    else:
+        sentence += "\n" + show_img_link
+
+
+    if bd.crtr == 'price':
+        print(sentence, '\nBesides, it costs no money!')
+    else:
+        print(sentence)

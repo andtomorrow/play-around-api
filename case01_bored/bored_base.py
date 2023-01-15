@@ -9,6 +9,7 @@ class Bored:
             'Select type of the activity\n1) educational 2) recreational 3) social 4) diy 5) charity 6) cooking 7) relaxation 8) music 9) busywork\nType a number > '
             ]
         self.crtr = ''
+        self.actvt_types = ["education", "recreational", "social", "diy", "charity", "cooking", "relaxation", "music", "busywork"]
     
     def introduction(self):
         self.usr_input = input("As you're bored, I will get you a nice activity chosen just for you.\nPress enter > ")
@@ -28,22 +29,39 @@ class Bored:
     def params_setting(self, chx):
         if chx == 1:
             self.crtr = 'participants'
-            self.q_answer = input(self.q_list[0]).strip()
+            self.q_answer = input(self.q_list[0])
         elif chx == 2:
             self.crtr = 'price'
             self.q_answer = ''
         elif chx == 3:
             self.crtr = 'kind'
-            self.q_answer = input(self.q_list[1]).strip()
+            self.crtr = 'type'
+            usr_num = int(input(self.q_list[1]))
+            self.q_answer = self.actvt_types[usr_num - 1]
+        else:
+            print('Please, try again > ')
         return self.crtr, self.q_answer
     
     def recommand(self, p1, p2):
-        self.URL = str(self.URL + f'?{p1}={p2}')
-        result = requests.get(url = self.URL).json()
+        URL = self.URL + '?' + p1 + '=' + p2
+        result = requests.get(url = URL).json()
         return result
 
-    
 
+class Pixab:
+    def __init__(self):
+        self.__key = open('pxbkey.txt', 'r').readline()
+        self.URL = 'https://pixabay.com/api'
+        self.outURL = self.URL + '/?key=' + self.__key + '&'
+        
+    
+    # def img_url(self, prms):
+    #     self.output = str(self.outURL + prms)
+    #     return self.output
+    
+    def search_img(self, prms):
+        self.img_url = requests.get(url=self.outURL, params=prms).json()
+        return self.img_url
 
 
 
